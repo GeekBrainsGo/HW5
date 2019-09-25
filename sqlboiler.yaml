@@ -1,0 +1,6 @@
+mysql:
+  dbname: "beego"
+  user: "mysql"
+  pass: "root"
+  host: "localhost"
+  sslmode: "false"
