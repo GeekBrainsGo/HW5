@@ -22,3 +22,4 @@
 1) Не забудьте добавить $GOPATH/bin в переменную окружения PATH
 2) Перегенерация моделей для boiler: `sqlboiler mysql -c sqlboiler.yaml --wipe`
 3) Пример конфига для бойлера в репозитории
+4) Если используете gorm и не парсится время (created_at, etc), установите флаг для его парсинга при подключении к БД: `mysql:root@/beego?parseTime=true`
