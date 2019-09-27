@@ -10,7 +10,8 @@ import (
 )
 
 func main() {
-	db, err := gorm.Open("mysql", "mysql:root@/beego?parseTime=true")
+	// db, err := gorm.Open("mysql", "mysql:root@/beego?parseTime=true")
+	db, err := gorm.Open("mysql", "root:root@tcp(MASTER01)/myuser?parseTime=true")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -36,9 +37,12 @@ func main() {
 
 	usersToFind := models.Users{}
 	db.Find(&usersToFind, "access = ?", "admin")
-	fmt.Println("usersToFind", usersToFind)
+	// fmt.Println("usersToFind", usersToFind)
+	for _,item :=range usersToFind {
+		fmt.Println("user:", item.ID,item.LastName)
+	}
 
 	// Обновить уровень доступа всем пользователям у которых его нет
 
-	db.Model(&models.User{}).Where("access = ?", "").Update("access", "guest")
+	// db.Model(&models.User{}).Where("access = ?", "").Update("access", "guest")
 }
