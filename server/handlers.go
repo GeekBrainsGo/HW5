@@ -3,7 +3,6 @@ package server
 import (
 	"encoding/json"
 	"io/ioutil"
-	"fmt"
 	"myblog/models"
 	"net/http"
 	"strconv"
@@ -30,35 +29,11 @@ func (serv *Server) getTemplateHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// viewBlogHandler - просмотр блога
-func (serv *Server) viewBlogHandler(w http.ResponseWriter, r *http.Request) {
-
-	bl := chi.URLParam(r, "id")
-	// blogID, _ := strconv.ParseInt(bl, 10, 64)
-	tint,_:=strconv.Atoi(bl)
-	blogID := uint(tint)
-
-	blog, err := models.GetBlogItem(serv.db, blogID)
-	if err != nil {
-		serv.SendInternalErr(w, err)
-		return
-	}
-
-	serv.Page.Title = "Статья"
-	serv.Page.Data = blog
-	serv.Page.Command = "view"
-
-	if err := serv.dictionary["BLOG"].ExecuteTemplate(w, "base", serv.Page); err != nil {
-		serv.SendInternalErr(w, err)
-		return
-	}
-}
-
 func getBlogIDFromRequest(r *http.Request) (uint, error) {
 
 	bl := chi.URLParam(r, "id")
 	// blogID, _ := strconv.ParseInt(bl, 10, 64)
-	tempInt, err:=strconv.Atoi(bl)
+	tempInt, err := strconv.Atoi(bl)
 	if err != nil {
 		return 0, err
 	}
@@ -66,34 +41,21 @@ func getBlogIDFromRequest(r *http.Request) (uint, error) {
 
 	return blogID, err
 }
+
 // editBlogHandler - редактирование блога
 func (serv *Server) editBlogHandler(w http.ResponseWriter, r *http.Request) {
-
-	// bl := chi.URLParam(r, "id")
-	// // blogID, _ := strconv.ParseInt(bl, 10, 64)
-	// tint,err:=strconv.Atoi(bl)
-
-	// if err != nil {
-	// 	serv.SendInternalErr(w, err)
-	// 	return
-	// }
-
-	// blogID := uint(tint)
 
 	blogID, err := getBlogIDFromRequest(r)
 	if err != nil {
 		serv.SendInternalErr(w, err)
 		return
 	}
-	fmt.Println("Blog ID:", blogID)
 
 	blog, err := models.GetBlogItem(serv.db, blogID)
 	if err != nil {
 		serv.SendInternalErr(w, err)
 		return
 	}
-
-	fmt.Println("Blog:", blog)
 
 	serv.Page.Title = "Редактирование"
 	serv.Page.Data = blog
@@ -107,15 +69,18 @@ func (serv *Server) editBlogHandler(w http.ResponseWriter, r *http.Request) {
 
 // putBlogHandler - обновляет блог
 func (serv *Server) putBlogHandler(w http.ResponseWriter, r *http.Request) {
-	bl := chi.URLParam(r, "id")
-	// blogID, _ := strconv.ParseInt(bl, 10, 64)
-	tint,_:=strconv.Atoi(bl)
-	blogID := uint(tint)
+
+	blogID, err := getBlogIDFromRequest(r)
+	if err != nil {
+		serv.SendInternalErr(w, err)
+		return
+	}
 
 	data, _ := ioutil.ReadAll(r.Body)
 
 	blog := models.BlogItem{}
 	_ = json.Unmarshal(data, &blog)
+
 	blog.ID = blogID
 
 	if err := blog.UpdateBlog(serv.db); err != nil {
@@ -155,12 +120,13 @@ func (serv *Server) addBlogHandler(w http.ResponseWriter, r *http.Request) {
 
 // deleteBlogHandler - удаляет блог
 func (serv *Server) deleteBlogHandler(w http.ResponseWriter, r *http.Request) {
-	bl := chi.URLParam(r, "id")
-	// blogID, _ := strconv.ParseInt(bl, 10, 64)
-	tint,_:=strconv.Atoi(bl)
-	blogID := uint(tint)
 
-	// blog := models.BlogItem{ID: blogID}
+	blogID, err := getBlogIDFromRequest(r)
+	if err != nil {
+		serv.SendInternalErr(w, err)
+		return
+	}
+
 	blog := models.BlogItem{}
 	blog.ID = blogID
 

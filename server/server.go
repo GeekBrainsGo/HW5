@@ -8,8 +8,8 @@ import (
 	"path"
 
 	"github.com/go-chi/chi"
-	"github.com/sirupsen/logrus"
 	"github.com/jinzhu/gorm"
+	"github.com/sirupsen/logrus"
 )
 
 const (
@@ -18,7 +18,7 @@ const (
 
 // Server - объект сервера
 type Server struct {
-	lg         *logrus.Logger
+	lg *logrus.Logger
 	// db         *sql.DB
 	db         *gorm.DB
 	rootDir    string
@@ -28,7 +28,7 @@ type Server struct {
 
 // New - создаёт новый экземпляр сервера
 // func New(lg *logrus.Logger, rootDir string, db *sql.DB) *Server {
-	func New(lg *logrus.Logger, rootDir string, db *gorm.DB) *Server {
+func New(lg *logrus.Logger, rootDir string, db *gorm.DB) *Server {
 
 	// initial
 	fileBase := path.Join(rootDir, TEMPLATESDIR, "base.html")
@@ -68,6 +68,7 @@ func (serv *Server) bindRoutes(r *chi.Mux) {
 			r.Get("/blog/{id}", serv.editBlogHandler)
 			r.Post("/blog", serv.addBlogHandler)
 			r.Get("/blog", serv.addGetBlogHandler)
+			r.Delete("/blog/{id}", serv.deleteBlogHandler)
 		})
 	})
 }

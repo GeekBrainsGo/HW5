@@ -16,11 +16,22 @@
             <li>
                 <div class="uk-inline">
                     <a href="/api/v1/blog/{{$val.ID}}" uk-icon="icon: file-edit"></a>
-                    <a href="/blog/del/{{$val.ID}}" uk-icon="icon: trash"></a>
+                    <a href="#" uk-icon="icon: trash" onclick="deleteTask('{{$val.ID}}')"></a>
                     <a class="uk-button uk-button-default" href="/api/v1/{{$val.ID}}">{{$val.Title}}</a>
                 </div>                
             </li>
         {{end}}
     </ul>
 </div>
+{{end}}
+
+{{define "scripts"}}
+<script>
+function deleteTask(id) {
+    fetch(`/api/v1/blog/${id}`, {method: 'DELETE'})
+        .then(resp => {
+            location.reload()
+        })
+}
+</script>
 {{end}}
