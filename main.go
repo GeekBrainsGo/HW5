@@ -13,13 +13,11 @@ import (
 func main() {
 	flagRootDir := flag.String("rootdir", "./web", "root dir of the server")
 	flagServAddr := flag.String("addr", "localhost:8080", "server address")
-	flagMySQL := flag.String("sql", "root:root@tcp(MASTER01)/MyBlogs?parseTime=true", "MySQL connection string, format: user:password@tcp(host:port)/database")
+	flagMySQL := flag.String("sql", "root:root@/MyBlogs?parseTime=true", "MySQL connection string, format: user:password@tcp(host:port)/database")
 	flag.Parse()
 
-	// db, err := gorm.Open("mysql", "root:root@tcp(MASTER01)/MyBlogs?parseTime=true")
-
 	lg := NewLogger()
-	// db, err := sql.Open("mysql", *flagMySQL)
+	
 	db, err := gorm.Open("mysql", *flagMySQL)
 	if err != nil {
 		lg.WithError(err).Fatal("can't connect to db")
