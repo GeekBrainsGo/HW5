@@ -12,8 +12,8 @@ package main
 */
 
 import (
+	"HW5/ormblog/server"
 	"flag"
-	"go_basics/packages/ormblog/server"
 	"os"
 	"os/signal"
 
